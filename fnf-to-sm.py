@@ -1,6 +1,6 @@
 # fnf-to-sm.py
 # FNF to SM converter
-# Copyright (C) 2021 shockdude
+# Copyright (C) 2021 shockdude, Fork by Kade Dev to add Dance Double support
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -294,12 +294,12 @@ def sm_to_fnf(infile):
 				continue
 
 			# regex for a sm note row
-			notes_re = re.compile("^[\\dM][\\dM][\\dM][\\dM]$")
+			notes_re = re.compile("^[a-zA-Z0-9]{8}$")
 
 			# TODO support SSC
 			if line.strip() == "#NOTES:":
 				line = chartfile.readline()
-				if line.strip() != "dance-single:":
+				if line.strip() != "dance-double:":
 					line = chartfile.readline()
 					continue
 				chartfile.readline()
@@ -331,13 +331,17 @@ def sm_to_fnf(infile):
 						fnf_section["changeBPM"] = fnf_section["bpm"] != fnf_notes[-1]["bpm"]
 					else:
 						fnf_section["changeBPM"] = False
-					fnf_section["mustHitSection"] = True
+					fnf_section["mustHitSection"] = False
 					fnf_section["typeOfSection"] = 0
 					
 					section_notes = []
 					for i in range(len(measure_notes)):
 						notes_row = measure_notes[i]
 						for j in range(len(notes_row)):
+
+							# since in dance-double we're assuming that 4-7 is bf and 0-3 is player2.
+							# so we gotta minus 4 or add 4 etc.
+
 							if notes_row[j] in ("1","2","4"):
 								note = [tickToTime(MEASURE_TICKS * section_number + i * ticks_per_row) - offset, j, 0]
 								section_notes.append(note)
@@ -349,6 +353,9 @@ def sm_to_fnf(infile):
 									note = tracked_holds[j]
 									del tracked_holds[j]
 									note[2] = tickToTime(MEASURE_TICKS * section_number + i * ticks_per_row) - offset - note[0]
+							elif notes_row[j] == "M": # mines work with tricky fire notes
+								note = [tickToTime(MEASURE_TICKS * section_number + i * ticks_per_row) - offset, j + 8, 0]
+								section_notes.append(note)
 					
 					fnf_section["sectionNotes"] = section_notes
 					
