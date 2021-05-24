@@ -1,4 +1,7 @@
-# FNF/SM converter
+# FNF/SM converter (Dance Double Support)
+
+This is a modified fork of (the orginal repo)[https://github.com/shockdude/fnf-to-sm] which adds dance double support instead of dance single charts.
+
 Roughly convert Friday Night Funkin .json charts to doubles simfiles for StepMania \
 Or convert StepMania simfiles to FNF charts. \
 Very WIP but it works, kinda.
