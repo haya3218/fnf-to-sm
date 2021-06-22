@@ -362,9 +362,16 @@ def sm_to_fnf(infile):
 									note = tracked_holds[j]
 									del tracked_holds[j]
 									note[2] = tickToTime(MEASURE_TICKS * section_number + i * ticks_per_row) - offset - note[0]
-							elif notes_row[j] == "M": # mines work with tricky fire notes
-								note = [tickToTime(MEASURE_TICKS * section_number + i * ticks_per_row) - offset, newPenis + 8, 0]
+							elif notes_row[j] == "M": # mines work with micd up mines
+								note = [tickToTime(MEASURE_TICKS * section_number + i * ticks_per_row) - offset, newPenis, 0, true]
 								section_notes.append(note)
+							elif notes_row[j] == "R": # rolls work with micd up rolls
+								if j in tracked_holds:
+									note = tracked_holds[j]
+									del tracked_holds[j]
+									note[2] = tickToTime(MEASURE_TICKS * section_number + i * ticks_per_row) - offset - note[0]
+									note[3] = false
+									note[4] = true
 					
 					fnf_section["sectionNotes"] = section_notes
 					
